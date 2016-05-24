@@ -14,7 +14,8 @@ import (
 )
 
 func main() {
-
+	// getSS2()
+	return
 	getSS()
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -58,7 +59,7 @@ func getSS() {
 	if e != nil {
 		fmt.Println(e)
 	}
-	c := doc.Find("#free").Find("div .col-lg-4.text-center")
+	c := doc.Find("#free").Find("div.col-lg-4.text-center")
 	c.Each(func(i int, content *goquery.Selection) {
 		serverInfo := []string{}
 		content.Find("h4").Each(func(i int, content *goquery.Selection) {
@@ -72,6 +73,29 @@ func getSS() {
 			s := fmt.Sprintf(templateJson, serverInfo[0], serverInfo[1], serverInfo[2], serverInfo[3])
 			servers = append(servers, s)
 		}
+	})
+}
+
+func getSS2() {
+	doc, e := goquery.NewDocument("http://freeshadowsocks.cf")
+	if e != nil {
+		fmt.Println(e)
+	}
+	c := doc.Find("div .row").Find("div .col-md-6.text-center")
+	c.Each(func(i int, content *goquery.Selection) {
+		serverInfo := []string{}
+		content.Find("h4").Each(func(i int, content *goquery.Selection) {
+			if i < 4 {
+				serverInfo = append(serverInfo, strings.Split(content.Text(), ":")[1])
+				// fmt.Println(i, serverInfo)
+			}
+		})
+		// 如果密码为空, 不加入到 servers slice 中
+		if serverInfo[2] != "" {
+			s := fmt.Sprintf(templateJson, serverInfo[0], serverInfo[1], serverInfo[2], serverInfo[3])
+			servers = append(servers, s)
+		}
+		fmt.Println(serverInfo)
 	})
 }
 
