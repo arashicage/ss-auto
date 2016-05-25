@@ -14,9 +14,8 @@ import (
 )
 
 func main() {
-	// getSS2()
-	return
-	getSS()
+	getSS0()
+	getSS1()
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -37,13 +36,14 @@ func main() {
 }
 
 const (
-	SHADOWSOCKS_ENTRY = "http://www.ishadowsocks.com/"
+	SHADOWSOCKS_ENTRY0 = "http://www.ishadowsocks.com/"
+	SHADOWSOCKS_ENTRY1 = "http://freeshadowsocks.cf"
 )
 
 var (
 	servers = []string{}
 
-	templateJson = `{
+	serverDetailTemplates = `{
     "server":"%s",
     "server_port":%s,
     "local_port":1080,
@@ -54,8 +54,8 @@ var (
 `
 )
 
-func getSS() {
-	doc, e := goquery.NewDocument(SHADOWSOCKS_ENTRY)
+func getSS0() {
+	doc, e := goquery.NewDocument(SHADOWSOCKS_ENTRY0)
 	if e != nil {
 		fmt.Println(e)
 	}
@@ -70,18 +70,19 @@ func getSS() {
 		})
 		// 如果密码为空, 不加入到 servers slice 中
 		if serverInfo[2] != "" {
-			s := fmt.Sprintf(templateJson, serverInfo[0], serverInfo[1], serverInfo[2], serverInfo[3])
+			s := fmt.Sprintf(serverDetailTemplates, serverInfo[0], serverInfo[1], serverInfo[2], serverInfo[3])
 			servers = append(servers, s)
 		}
+		fmt.Println(serverInfo)
 	})
 }
 
-func getSS2() {
-	doc, e := goquery.NewDocument("http://freeshadowsocks.cf")
+func getSS1() {
+	doc, e := goquery.NewDocument(SHADOWSOCKS_ENTRY1)
 	if e != nil {
 		fmt.Println(e)
 	}
-	c := doc.Find("div .row").Find("div .col-md-6.text-center")
+	c := doc.Find("div.row").Find("div.col-md-6.text-center")
 	c.Each(func(i int, content *goquery.Selection) {
 		serverInfo := []string{}
 		content.Find("h4").Each(func(i int, content *goquery.Selection) {
@@ -92,7 +93,7 @@ func getSS2() {
 		})
 		// 如果密码为空, 不加入到 servers slice 中
 		if serverInfo[2] != "" {
-			s := fmt.Sprintf(templateJson, serverInfo[0], serverInfo[1], serverInfo[2], serverInfo[3])
+			s := fmt.Sprintf(serverDetailTemplates, serverInfo[0], serverInfo[1], serverInfo[2], serverInfo[3])
 			servers = append(servers, s)
 		}
 		fmt.Println(serverInfo)
