@@ -15,7 +15,7 @@ import (
 
 func main() {
 	getSS0()
-	getSS1()
+	// getSS1()
 
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -125,7 +125,8 @@ func restartSS() {
 
 	cmd.Stdin = in
 
-	cmdLine := "brew services restart shadowsocks-libev | tee -a /tmp/log/ss-auto.log"
+	// cmdLine := "brew services restart shadowsocks-libev | tee -a /tmp/log/ss-auto.log"
+	cmdLine := "brew services restart shadowsocks-libev"
 
 	in.WriteString(cmdLine)
 
